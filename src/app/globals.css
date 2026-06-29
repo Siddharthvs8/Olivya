@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  OLIVIYA DEVELOPERS — Dark + Gold luxury design system             */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* Brand palette */
+  --color-ink: #0a0a0b;
+  --color-charcoal: #121214;
+  --color-graphite: #1b1b1f;
+  --color-stone: #26262b;
+  --color-line: #2c2c31;
+
+  --color-gold: #c9a24b;
+  --color-gold-soft: #e3c986;
+  --color-gold-deep: #9c7a32;
+
+  --color-cream: #f5f1e8;
+  --color-muted: #9c968b;
+  --color-faint: #6b665d;
+
+  /* Fonts (CSS vars are injected by next/font) */
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Easing */
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Container */
+  --spacing-gutter: 1.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    /* Framer Motion measures scroll-linked sections against the document
+       scroller (<html>); a non-static position lets it compute offsets
+       cleanly and silences its dev-only "non-static position" warning. */
+    position: relative;
+  }
+
+  /* Lenis controls scroll; disable native smooth when active */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-ink); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--color-gold-deep), var(--color-gold));
+    border-radius: 99px;
+    border: 2px solid var(--color-ink);
+  }
+}
+
+@layer components {
+  .container-luxe {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(100deg, var(--color-gold-soft), var(--color-gold), var(--color-gold-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Eyebrow label with gold tick */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold));
+  }
+
+  /* Thin gold hairline divider */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-line), transparent);
+  }
+}
+
+@layer utilities {
+  /* Background noise / vignette helpers */
+  .bg-grain {
+    background-image: radial-gradient(circle at center, rgba(201, 162, 75, 0.06), transparent 60%);
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent);
+    mask-image: linear-gradient(to bottom, black 70%, transparent);
+  }
+
+  .pause-scroll {
+    overflow: hidden;
+  }
+
+  /* Drifting gold dust for the build/grain animations */
+  .oh-dust {
+    box-shadow: 0 0 6px rgba(201, 162, 75, 0.6);
+    animation-name: oh-float;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes oh-float {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.15;
+    }
+    50% {
+      transform: translateY(-26px) scale(1.4);
+      opacity: 0.7;
+    }
+  }
+
+  /* Embers rising off the finished home as it ignites with warm light */
+  .oh-ember {
+    box-shadow: 0 0 8px rgba(231, 200, 105, 0.9);
+    animation-name: oh-rise;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes oh-rise {
+    0% {
+      transform: translateY(0) translateX(0) scale(0.6);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.9;
+    }
+    70% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(-220px) translateX(var(--ox, 0px)) scale(1.15);
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oh-dust,
+  .oh-ember {
+    animation: none;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
