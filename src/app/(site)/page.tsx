@@ -7,6 +7,7 @@ import Quote from "@/components/sections/Quote";
 import Process from "@/components/sections/Process";
 import FeaturedProjects from "@/components/sections/FeaturedProjects";
 import ValueProps from "@/components/sections/ValueProps";
+import CoreValues from "@/components/sections/CoreValues";
 import LatestPosts from "@/components/sections/LatestPosts";
 import Experienza from "@/components/sections/Experienza";
 import LogoForge from "@/components/sections/LogoForge";
@@ -30,6 +31,7 @@ export default async function HomePage() {
         <Process />
         <BuildJourney />
         <ValueProps />
+        <CoreValues />
         <AreasFaq />
         <LatestPosts />
       </div>
