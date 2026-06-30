@@ -172,11 +172,33 @@ type FileStore = {
 
 const FILE = path.join(process.cwd(), ".data", "store.json");
 
+/**
+ * In-memory copy of the store. Loaded/seeded once per process, then kept in
+ * sync on every write. This is what makes the file backend safe on read-only
+ * / serverless filesystems (e.g. Vercel without a database): reads always
+ * succeed from memory, and a failed disk write never crashes a page. For real
+ * persistence in production, set DATABASE_URL so the Postgres backend is used.
+ */
+let memory: FileStore | null = null;
+
+function seededStore(): FileStore {
+  return {
+    posts: SEED_POSTS.map((p) => ({ ...p })),
+    projects: SEED_PROJECTS.map((p) => ({ ...p })),
+    videos: SEED_VIDEOS.map((v) => ({ ...v })),
+    jobs: SEED_JOBS.map((j) => ({ ...j })),
+    panoramas: SEED_PANOS.map((p) => ({ ...p })),
+    settings: { ...DEFAULT_SETTINGS },
+    leads: [],
+  };
+}
+
 async function readFile(): Promise<FileStore> {
+  if (memory) return memory;
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const data = JSON.parse(raw) as Partial<FileStore>;
-    return {
+    memory = {
       posts: data.posts ?? [],
       projects: data.projects ?? SEED_PROJECTS.map((p) => ({ ...p })),
       videos: data.videos ?? SEED_VIDEOS.map((v) => ({ ...v })),
@@ -186,24 +208,28 @@ async function readFile(): Promise<FileStore> {
       leads: data.leads ?? [],
     };
   } catch {
-    // First run: seed with demo posts + projects + videos + jobs + panoramas.
-    const seeded: FileStore = {
-      posts: SEED_POSTS.map((p) => ({ ...p })),
-      projects: SEED_PROJECTS.map((p) => ({ ...p })),
-      videos: SEED_VIDEOS.map((v) => ({ ...v })),
-      jobs: SEED_JOBS.map((j) => ({ ...j })),
-      panoramas: SEED_PANOS.map((p) => ({ ...p })),
-      settings: { ...DEFAULT_SETTINGS },
-      leads: [],
-    };
-    await writeFile(seeded);
-    return seeded;
+    // No file yet (first local run) or a read-only filesystem (Vercel). Seed
+    // in memory and best-effort persist — never throw, so reads can't 500.
+    memory = seededStore();
+    await persist(memory);
+  }
+  return memory;
+}
+
+/** Best-effort write to disk. Swallows errors on read-only filesystems. */
+async function persist(data: FileStore): Promise<void> {
+  try {
+    await fs.mkdir(path.dirname(FILE), { recursive: true });
+    await fs.writeFile(FILE, JSON.stringify(data, null, 2), "utf8");
+  } catch {
+    // Read-only / serverless filesystem — keep running on the in-memory copy.
+    // Configure DATABASE_URL to persist changes in production.
   }
 }
 
 async function writeFile(data: FileStore): Promise<void> {
-  await fs.mkdir(path.dirname(FILE), { recursive: true });
-  await fs.writeFile(FILE, JSON.stringify(data, null, 2), "utf8");
+  memory = data; // keep the in-memory copy authoritative for this process
+  await persist(data);
 }
 
 /* ================================ Reads ================================== */

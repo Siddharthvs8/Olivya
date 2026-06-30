@@ -38,6 +38,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ url: blob.url });
     }
 
+    // On Vercel the filesystem is read-only, so Blob is required there.
+    if (process.env.VERCEL) {
+      return NextResponse.json(
+        {
+          error:
+            "Image storage isn't configured. Add a Vercel Blob store (BLOB_READ_WRITE_TOKEN) to enable uploads in production, or paste an image URL instead.",
+        },
+        { status: 503 },
+      );
+    }
+
     // Local dev: write to /public/uploads so it's served statically.
     const dir = path.join(process.cwd(), "public", "uploads");
     await fs.mkdir(dir, { recursive: true });
