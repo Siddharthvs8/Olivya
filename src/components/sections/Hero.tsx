@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
@@ -92,6 +92,18 @@ export default function Hero({ image }: { image: string }) {
             </motion.span>
           </span>
         </h1>
+
+        <motion.div
+          variants={fade}
+          className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium uppercase tracking-[0.3em] text-cream/85 sm:text-sm"
+        >
+          {["Design", "Build", "Decor", "Care"].map((word, i, arr) => (
+            <Fragment key={word}>
+              <span>{word}</span>
+              {i < arr.length - 1 && <span className="text-gold">|</span>}
+            </Fragment>
+          ))}
+        </motion.div>
 
         <motion.p
           variants={fade}
