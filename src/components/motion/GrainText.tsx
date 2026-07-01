@@ -72,6 +72,15 @@ const smooth = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
+// Canvas centres text on its glyph *advance* box, which includes a trailing
+// letter-space — so letter-spaced lines land a hair left of true centre. Return
+// the x that centres the actual ink instead. Requires textAlign "center" and
+// the font + letterSpacing already applied to `ctx`.
+function centeredX(ctx: CanvasRenderingContext2D, text: string, w: number) {
+  const m = ctx.measureText(text);
+  return w / 2 - (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
+}
+
 export default function GrainText({
   progress,
   reduced,
@@ -141,7 +150,7 @@ export default function GrainText({
         if ("letterSpacing" in o) {
           (o as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${size * line.ls}px`;
         }
-        o.fillText(line.text, W / 2, ly);
+        o.fillText(line.text, centeredX(o, line.text, W), ly);
       }
 
       const data = o.getImageData(0, 0, off.width, off.height).data;
@@ -194,7 +203,7 @@ export default function GrainText({
           if ("letterSpacing" in ctx) {
             (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${size * line.ls}px`;
           }
-          ctx.fillText(line.text, W / 2, y);
+          ctx.fillText(line.text, centeredX(ctx, line.text, W), y);
         }
         if ("letterSpacing" in ctx) {
           (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = "0px";
