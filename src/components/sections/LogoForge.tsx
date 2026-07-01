@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import GrainText from "@/components/motion/GrainText";
@@ -55,6 +55,7 @@ export default function LogoForge() {
   const villaScale = useTransform(build, [0, 1], [0.955, 1]);
 
   const eyebrowOpacity = useTransform(p, [0, 0.08, 0.22], [0, 1, 0]);
+  const taglineOpacity = useTransform(p, [0, 0.07], [1, 0]);
   const cueOpacity = useTransform(p, [0, 0.08], [1, 0]);
   const signOpacity = useTransform(p, [0.7, 0.9], [0, 1]);
 
@@ -170,6 +171,25 @@ export default function LogoForge() {
         <div className="absolute inset-0 z-20">
           <GrainText progress={p} reduced={reduced} />
         </div>
+
+        {/* discipline tagline, seated just beneath the wordmark; it dissolves
+            with the wordmark as the grains take flight. The top offset mirrors
+            GrainText's layout math (block centre at 46% + half the 2.3·base
+            stack) so it tracks the last line across viewport sizes. */}
+        <motion.div
+          style={{
+            opacity: reduced ? 1 : taglineOpacity,
+            top: "calc(46vh + min(9.78vw, 140px) + 1.3rem)",
+          }}
+          className="pointer-events-none absolute left-1/2 z-20 flex -translate-x-1/2 items-center gap-x-3 whitespace-nowrap text-[0.62rem] font-medium uppercase tracking-[0.34em] text-cream/85 sm:gap-x-4 sm:text-xs"
+        >
+          {["Design", "Build", "Decor", "Care"].map((word, i, arr) => (
+            <Fragment key={word}>
+              <span>{word}</span>
+              {i < arr.length - 1 && <span className="text-gold">|</span>}
+            </Fragment>
+          ))}
+        </motion.div>
 
         {/* reformed signature once the home stands */}
         <motion.span
