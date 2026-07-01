@@ -51,6 +51,14 @@ export const DEFAULT_SETTINGS: SiteSettings = {
       "https://www.linkedin.com/in/tom-george-the-luxury-home-consultant-69b0171b2/?originalSubdomain=in",
     twitter: "https://x.com/oliviyabuilders",
   },
+  consultant_image:
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+  consultant_name: "Tom George",
+  consultant_title: "The Luxury Home Consultant",
+  consultant_bio:
+    "With an eye for detail and a deep love for Kerala's architectural heritage, Tom personally guides every client through their journey — ensuring the home you imagine is the home you receive. His philosophy is simple: build it as if it were his own, and make it last for generations.",
+  consultant_cta_label: "Talk to Tom",
+  consultant_cta_href: "/contact",
 };
 
 export const SERVICES = [

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import * as store from "@/lib/store";
+import { DEFAULT_SETTINGS } from "@/lib/site";
 import { slugify, youtubeId } from "@/lib/utils";
 
 function str(v: FormDataEntryValue | null) {
@@ -244,9 +245,20 @@ export async function updateSettings(formData: FormData) {
       kolo: str(formData.get("kolo")) || undefined,
       whatsapp: str(formData.get("whatsapp")) || undefined,
     },
+    // About page — consultant. Blank fields fall back to the defaults so the
+    // section never renders empty.
+    consultant_image: str(formData.get("consultant_image")) || DEFAULT_SETTINGS.consultant_image,
+    consultant_name: str(formData.get("consultant_name")) || DEFAULT_SETTINGS.consultant_name,
+    consultant_title: str(formData.get("consultant_title")) || DEFAULT_SETTINGS.consultant_title,
+    consultant_bio: str(formData.get("consultant_bio")) || DEFAULT_SETTINGS.consultant_bio,
+    consultant_cta_label:
+      str(formData.get("consultant_cta_label")) || DEFAULT_SETTINGS.consultant_cta_label,
+    consultant_cta_href:
+      str(formData.get("consultant_cta_href")) || DEFAULT_SETTINGS.consultant_cta_href,
   });
 
   // Settings touch every public page.
   revalidatePath("/", "layout");
+  revalidatePath("/about");
   revalidatePath("/admin/settings");
 }

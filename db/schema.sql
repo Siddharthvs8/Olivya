@@ -87,19 +87,34 @@ create index if not exists panoramas_published_created_idx
   on panoramas (published, created_at desc);
 
 create table if not exists site_settings (
-  id          int primary key default 1,
-  logo_url    text,
-  hero_image  text,
-  about_image text,
-  cta_image   text,
-  phone       text not null default '',
-  email       text not null default '',
-  address     text not null default '',
-  socials     jsonb not null default '{}'::jsonb,
-  updated_at  timestamptz not null default now()
+  id                   int primary key default 1,
+  logo_url             text,
+  hero_image           text,
+  about_image          text,
+  cta_image            text,
+  phone                text not null default '',
+  email                text not null default '',
+  address              text not null default '',
+  socials              jsonb not null default '{}'::jsonb,
+  consultant_image     text,
+  consultant_name      text not null default '',
+  consultant_title     text not null default '',
+  consultant_bio       text not null default '',
+  consultant_cta_label text not null default '',
+  consultant_cta_href  text not null default '',
+  updated_at           timestamptz not null default now()
 );
 
 insert into site_settings (id) values (1) on conflict (id) do nothing;
+
+-- Backfill the About-page consultant columns on databases created before they
+-- existed (idempotent — safe to re-run via `npm run db:setup`).
+alter table site_settings add column if not exists consultant_image     text;
+alter table site_settings add column if not exists consultant_name      text not null default '';
+alter table site_settings add column if not exists consultant_title     text not null default '';
+alter table site_settings add column if not exists consultant_bio       text not null default '';
+alter table site_settings add column if not exists consultant_cta_label text not null default '';
+alter table site_settings add column if not exists consultant_cta_href  text not null default '';
 
 create table if not exists leads (
   id         uuid primary key default gen_random_uuid(),

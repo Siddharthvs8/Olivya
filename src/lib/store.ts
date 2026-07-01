@@ -791,14 +791,23 @@ export async function saveSettings(s: SiteSettings): Promise<void> {
   if (isDbConfigured) {
     const sql = db();
     await sql`
-      insert into site_settings (id, logo_url, hero_image, about_image, cta_image, phone, email, address, socials, updated_at)
+      insert into site_settings (
+        id, logo_url, hero_image, about_image, cta_image, phone, email, address, socials,
+        consultant_image, consultant_name, consultant_title, consultant_bio,
+        consultant_cta_label, consultant_cta_href, updated_at)
       values (1, ${s.logo_url}, ${s.hero_image}, ${s.about_image}, ${s.cta_image},
-              ${s.phone}, ${s.email}, ${s.address}, ${JSON.stringify(s.socials)}::jsonb, now())
+              ${s.phone}, ${s.email}, ${s.address}, ${JSON.stringify(s.socials)}::jsonb,
+              ${s.consultant_image}, ${s.consultant_name}, ${s.consultant_title}, ${s.consultant_bio},
+              ${s.consultant_cta_label}, ${s.consultant_cta_href}, now())
       on conflict (id) do update set
         logo_url = excluded.logo_url, hero_image = excluded.hero_image,
         about_image = excluded.about_image, cta_image = excluded.cta_image,
         phone = excluded.phone, email = excluded.email, address = excluded.address,
-        socials = excluded.socials, updated_at = now()`;
+        socials = excluded.socials,
+        consultant_image = excluded.consultant_image, consultant_name = excluded.consultant_name,
+        consultant_title = excluded.consultant_title, consultant_bio = excluded.consultant_bio,
+        consultant_cta_label = excluded.consultant_cta_label,
+        consultant_cta_href = excluded.consultant_cta_href, updated_at = now()`;
     return;
   }
   const store = await readFile();

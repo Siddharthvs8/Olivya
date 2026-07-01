@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getSettings } from "@/lib/data";
-import { COMPANY, STATS } from "@/lib/site";
+import { COMPANY, STATS, DEFAULT_SETTINGS } from "@/lib/site";
 import PageHero from "@/components/sections/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/motion/Reveal";
@@ -19,6 +19,17 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const settings = await getSettings();
+
+  // Consultant content is admin-editable via Settings; fall back to the
+  // defaults so the section never renders blank (e.g. on a freshly migrated DB).
+  const consultant = {
+    image: settings.consultant_image || DEFAULT_SETTINGS.consultant_image || "",
+    name: settings.consultant_name || DEFAULT_SETTINGS.consultant_name,
+    title: settings.consultant_title || DEFAULT_SETTINGS.consultant_title,
+    bio: settings.consultant_bio || DEFAULT_SETTINGS.consultant_bio,
+    ctaLabel: settings.consultant_cta_label || DEFAULT_SETTINGS.consultant_cta_label,
+    ctaHref: settings.consultant_cta_href || DEFAULT_SETTINGS.consultant_cta_href,
+  };
 
   return (
     <>
@@ -98,8 +109,8 @@ export default async function AboutPage() {
           <Reveal>
             <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl border border-line">
               <Image
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80"
-                alt="Tom George, The Luxury Home Consultant"
+                src={consultant.image}
+                alt={`${consultant.name}, ${consultant.title}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover"
@@ -108,19 +119,15 @@ export default async function AboutPage() {
           </Reveal>
           <div>
             <span className="eyebrow">Meet your consultant</span>
-            <h2 className="mt-6 text-4xl sm:text-5xl">Tom George</h2>
+            <h2 className="mt-6 text-4xl sm:text-5xl">{consultant.name}</h2>
             <p className="mt-2 text-sm uppercase tracking-[0.25em] text-gold">
-              The Luxury Home Consultant
+              {consultant.title}
             </p>
-            <p className="mt-7 max-w-xl leading-relaxed text-muted">
-              With an eye for detail and a deep love for Kerala&apos;s
-              architectural heritage, Tom personally guides every client through
-              their journey — ensuring the home you imagine is the home you
-              receive. His philosophy is simple: build it as if it were his own,
-              and make it last for generations.
+            <p className="mt-7 max-w-xl whitespace-pre-line leading-relaxed text-muted">
+              {consultant.bio}
             </p>
             <div className="mt-9">
-              <Button href="/contact">Talk to Tom</Button>
+              <Button href={consultant.ctaHref}>{consultant.ctaLabel}</Button>
             </div>
           </div>
         </div>

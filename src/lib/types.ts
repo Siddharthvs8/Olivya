@@ -98,5 +98,12 @@ export type SiteSettings = {
   email: string;
   address: string;
   socials: SocialLinks;
+  /** About page — "Meet your consultant" section. */
+  consultant_image: string | null;
+  consultant_name: string;
+  consultant_title: string;
+  consultant_bio: string;
+  consultant_cta_label: string;
+  consultant_cta_href: string;
   updated_at?: string;
 };

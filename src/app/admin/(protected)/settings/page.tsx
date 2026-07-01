@@ -74,6 +74,74 @@ export default async function AdminSettingsPage() {
           </div>
         </section>
 
+        {/* About page — consultant */}
+        <section className="rounded-2xl border border-line bg-charcoal/40 p-6 sm:p-8">
+          <h2 className="font-serif text-2xl text-cream">About page — consultant</h2>
+          <p className="mt-1 text-sm text-muted">
+            The “Meet your consultant” section on the About Us page.
+          </p>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,20rem)_1fr]">
+            <ImageUploader
+              name="consultant_image"
+              label="Consultant photo"
+              defaultValue={settings.consultant_image}
+              ratio="aspect-square"
+            />
+            <div className="grid content-start gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm text-cream">Name</label>
+                  <input
+                    name="consultant_name"
+                    defaultValue={settings.consultant_name}
+                    placeholder="Tom George"
+                    className={field}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm text-cream">Title</label>
+                  <input
+                    name="consultant_title"
+                    defaultValue={settings.consultant_title}
+                    placeholder="The Luxury Home Consultant"
+                    className={field}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm text-cream">Bio</label>
+                <textarea
+                  name="consultant_bio"
+                  defaultValue={settings.consultant_bio}
+                  rows={5}
+                  placeholder="A short introduction to your consultant…"
+                  className={`${field} resize-y leading-relaxed`}
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm text-cream">Button label</label>
+                  <input
+                    name="consultant_cta_label"
+                    defaultValue={settings.consultant_cta_label}
+                    placeholder="Talk to Tom"
+                    className={field}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm text-cream">Button link</label>
+                  <input
+                    name="consultant_cta_href"
+                    defaultValue={settings.consultant_cta_href}
+                    placeholder="/contact"
+                    className={field}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Contact */}
         <section className="rounded-2xl border border-line bg-charcoal/40 p-6 sm:p-8">
           <h2 className="font-serif text-2xl text-cream">Contact details</h2>
