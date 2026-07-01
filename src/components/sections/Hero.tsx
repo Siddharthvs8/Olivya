@@ -33,7 +33,7 @@ export default function Hero({ image }: { image: string }) {
   return (
     <section
       ref={ref}
-      className="relative flex h-[100svh] min-h-[640px] items-end overflow-hidden"
+      className="relative flex min-h-[max(100svh,640px)] items-end overflow-hidden"
     >
       {/* Parallax background */}
       <motion.div style={{ y, scale }} className="absolute inset-0">
@@ -64,7 +64,7 @@ export default function Hero({ image }: { image: string }) {
         variants={container}
         initial="hidden"
         animate="show"
-        className="container-luxe relative z-10 pb-20 sm:pb-28"
+        className="container-luxe relative z-10 pt-28 pb-20 sm:pt-32 sm:pb-28"
       >
         <div className="overflow-hidden">
           <motion.span
