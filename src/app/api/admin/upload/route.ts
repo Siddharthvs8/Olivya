@@ -29,8 +29,11 @@ export async function POST(request: Request) {
   const name = `${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`;
 
   try {
-    // Production (Vercel): store in Blob.
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    // Production (Vercel): store in Blob. Authenticates with either a
+    // read-write token (BLOB_READ_WRITE_TOKEN) or OIDC (BLOB_STORE_ID +
+    // VERCEL_OIDC_TOKEN) — both are auto-injected on Vercel when a Blob
+    // store is connected to the project. put() picks up whichever is set.
+    if (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
       const blob = await put(`media/${name}`, file, {
         access: "public",
         contentType: file.type || undefined,

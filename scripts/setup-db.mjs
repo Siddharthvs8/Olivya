@@ -29,7 +29,7 @@ const statements = ddl
 
 try {
   for (const statement of statements) {
-    await sql.query(statement);
+    await sql(statement); // ordinary (non-template) call runs a raw SQL string
   }
   console.log(`\n✓ Database ready — applied ${statements.length} statements.\n`);
 } catch (err) {

@@ -25,9 +25,22 @@ import {
 export default function LogoForge() {
   const ref = useRef<HTMLDivElement>(null);
   const [reduced, setReduced] = useState(false);
+  const [compact, setCompact] = useState(false);
 
   useEffect(() => {
-    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobile = window.matchMedia("(max-width: 767px)");
+    const sync = () => {
+      setReduced(rm.matches);
+      setCompact(mobile.matches);
+    };
+    sync();
+    rm.addEventListener("change", sync);
+    mobile.addEventListener("change", sync);
+    return () => {
+      rm.removeEventListener("change", sync);
+      mobile.removeEventListener("change", sync);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -58,6 +71,61 @@ export default function LogoForge() {
   const taglineOpacity = useTransform(p, [0, 0.07], [1, 0]);
   const cueOpacity = useTransform(p, [0, 0.08], [1, 0]);
   const signOpacity = useTransform(p, [0.7, 0.9], [0, 1]);
+
+  /* Phones and reduced-motion: skip the pinned scroll canvas (which overlaps
+     on small screens) and show a clean, stacked composition — the finished
+     home on top, the wordmark clearly beneath it, never overlapping. */
+  if (reduced || compact) {
+    return (
+      <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,162,75,0.12),_transparent_62%)]" />
+        <div className="container-luxe relative flex flex-col items-center gap-10 text-center">
+          <span className="eyebrow justify-center">From our name, your home</span>
+
+          {/* the finished home */}
+          <div className="w-full max-w-[560px]" style={{ aspectRatio: "1200 / 700" }}>
+            <svg
+              viewBox={VILLA_VIEWBOX}
+              preserveAspectRatio="xMidYMid meet"
+              className="h-full w-full [filter:drop-shadow(0_0_12px_rgba(201,162,75,0.4))]"
+            >
+              <defs>
+                <GoldGradient id="forge-gold" />
+                <WindowLightDefs id="forge" />
+              </defs>
+              <WindowLights progress={build} gradientId="forge" reduced />
+              {VILLA_PARTS.map((part, i) => (
+                <VillaStaticStroke key={i} part={part} gradientId="forge-gold" />
+              ))}
+            </svg>
+          </div>
+
+          {/* the wordmark, sitting beneath the home */}
+          <div className="flex flex-col items-center gap-1.5 font-[family-name:var(--font-montserrat)]">
+            <span className="text-gradient-gold text-4xl font-bold tracking-[0.06em] sm:text-6xl">
+              OLIVIYA
+            </span>
+            <span className="text-gradient-gold text-base font-semibold tracking-[0.2em] sm:text-2xl">
+              DEVELOPERS PVT LTD
+            </span>
+            <span className="text-gradient-gold text-[0.7rem] font-medium tracking-[0.18em] sm:text-base">
+              THE LUXURY HOME BUILDER
+            </span>
+          </div>
+
+          {/* discipline tagline */}
+          <div className="flex items-center gap-x-3 whitespace-nowrap text-[0.6rem] font-medium uppercase tracking-[0.32em] text-cream/85 sm:gap-x-4 sm:text-xs">
+            {["Design", "Build", "Decor", "Care"].map((word, i, arr) => (
+              <Fragment key={word}>
+                <span>{word}</span>
+                {i < arr.length - 1 && <span className="text-gold">|</span>}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={ref} className="relative h-[260vh] bg-ink">
