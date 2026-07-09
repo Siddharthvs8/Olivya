@@ -25,22 +25,13 @@ import {
 export default function LogoForge() {
   const ref = useRef<HTMLDivElement>(null);
   const [reduced, setReduced] = useState(false);
-  const [compact, setCompact] = useState(false);
 
   useEffect(() => {
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mobile = window.matchMedia("(max-width: 767px)");
-    const sync = () => {
-      setReduced(rm.matches);
-      setCompact(mobile.matches);
-    };
+    const sync = () => setReduced(rm.matches);
     sync();
     rm.addEventListener("change", sync);
-    mobile.addEventListener("change", sync);
-    return () => {
-      rm.removeEventListener("change", sync);
-      mobile.removeEventListener("change", sync);
-    };
+    return () => rm.removeEventListener("change", sync);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -72,10 +63,10 @@ export default function LogoForge() {
   const cueOpacity = useTransform(p, [0, 0.08], [1, 0]);
   const signOpacity = useTransform(p, [0.7, 0.9], [0, 1]);
 
-  /* Phones and reduced-motion: skip the pinned scroll canvas (which overlaps
-     on small screens) and show a clean, stacked composition — the finished
-     home on top, the wordmark clearly beneath it, never overlapping. */
-  if (reduced || compact) {
+  /* Reduced-motion only: skip the pinned scroll canvas and show a clean,
+     stacked composition — the finished home on top, the wordmark clearly
+     beneath it. (The animated version runs on mobile too.) */
+  if (reduced) {
     return (
       <section className="relative overflow-hidden bg-ink py-20 sm:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,162,75,0.12),_transparent_62%)]" />
@@ -181,7 +172,10 @@ export default function LogoForge() {
           viewBox={VILLA_VIEWBOX}
           preserveAspectRatio="xMidYMax meet"
           style={{ y: reduced ? undefined : villaY, scale: reduced ? undefined : villaScale }}
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 mx-auto h-[80vh] w-full max-w-[1300px] [filter:drop-shadow(0_0_14px_rgba(201,162,75,0.4))]"
+          /* On phones the house is width-limited to a short band; lift it off the
+             bottom so the signature has clear room beneath it. Desktop stays
+             bottom-anchored. */
+          className="pointer-events-none absolute inset-x-0 bottom-[17%] z-10 mx-auto h-[80vh] w-full max-w-[1300px] [filter:drop-shadow(0_0_14px_rgba(201,162,75,0.4))] sm:bottom-0"
         >
           <defs>
             <GoldGradient id="forge-gold" />
