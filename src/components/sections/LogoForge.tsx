@@ -257,7 +257,7 @@ export default function LogoForge() {
             below the house so it never overlaps the base/steps */}
         <motion.span
           style={{ opacity: reduced ? 0 : signOpacity }}
-          className="absolute bottom-[5%] left-1/2 z-20 -translate-x-1/2 text-[0.7rem] uppercase tracking-[0.5em] text-gold"
+          className="absolute inset-x-0 bottom-[15%] z-20 px-6 pl-[calc(1.5rem+0.5em)] text-center text-[0.7rem] uppercase tracking-[0.5em] text-gold sm:bottom-[5%]"
         >
           Oliviya Developers
         </motion.span>
