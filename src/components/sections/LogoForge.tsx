@@ -259,10 +259,11 @@ export default function LogoForge() {
           ))}
         </motion.div>
 
-        {/* reformed signature once the home stands */}
+        {/* reformed signature once the home stands — seated in the clear band
+            below the house so it never overlaps the base/steps */}
         <motion.span
           style={{ opacity: reduced ? 0 : signOpacity }}
-          className="absolute bottom-[13%] left-1/2 z-20 -translate-x-1/2 text-[0.7rem] uppercase tracking-[0.5em] text-gold"
+          className="absolute bottom-[5%] left-1/2 z-20 -translate-x-1/2 text-[0.7rem] uppercase tracking-[0.5em] text-gold"
         >
           Oliviya Developers
         </motion.span>

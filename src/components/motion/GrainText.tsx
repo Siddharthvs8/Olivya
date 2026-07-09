@@ -118,6 +118,9 @@ export default function GrainText({
           .trim() || "sans-serif";
       W = wrap.clientWidth;
       H = wrap.clientHeight;
+      // Element not laid out yet (0×0) — skip; the ResizeObserver re-runs
+      // build() once it has real dimensions. Avoids getImageData(width 0).
+      if (!W || !H) return;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
       canvas.style.width = `${W}px`;
