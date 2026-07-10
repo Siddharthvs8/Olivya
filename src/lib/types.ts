@@ -76,6 +76,8 @@ export type SocialLinks = {
   twitter?: string;
   /** WhatsApp number (any format) powering the floating chat button. */
   whatsapp?: string;
+  /** Google Maps link the contact-page map opens when clicked. */
+  map_url?: string;
 };
 
 export type Lead = {

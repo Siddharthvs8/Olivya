@@ -176,6 +176,21 @@ export default async function AdminSettingsPage() {
               <label className="mb-2 block text-sm text-cream">Address</label>
               <input name="address" defaultValue={settings.address} className={field} />
             </div>
+            <div className="sm:col-span-2">
+              <label className="mb-2 block text-sm text-cream">Google Maps link</label>
+              <input
+                name="map_url"
+                type="url"
+                defaultValue={settings.socials.map_url ?? ""}
+                placeholder="https://maps.app.goo.gl/…  or  https://www.google.com/maps/place/…"
+                className={field}
+              />
+              <p className="mt-1.5 text-xs text-faint">
+                Opens when someone clicks the map on the Contact page. In Google
+                Maps, find your location → Share → Copy link, and paste it here.
+                Leave empty to use your address.
+              </p>
+            </div>
           </div>
         </section>
 

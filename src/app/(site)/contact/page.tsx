@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 import { getSettings } from "@/lib/data";
 import { COMPANY } from "@/lib/site";
 import PageHero from "@/components/sections/PageHero";
@@ -22,6 +22,13 @@ export default async function ContactPage() {
     { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` },
     { icon: MapPin, label: "Visit", value: settings.address, href: undefined },
   ];
+
+  const place = settings.address || "Ernakulam, Kerala, India";
+  const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(place)}&output=embed`;
+  // Admin-set Google Maps link (Settings → Contact) — falls back to the address.
+  const mapUrl =
+    settings.socials.map_url?.trim() ||
+    `https://www.google.com/maps?q=${encodeURIComponent(place)}`;
 
   return (
     <>
@@ -83,17 +90,27 @@ export default async function ContactPage() {
             </Reveal>
 
             <Reveal delay={0.35}>
-              <div className="mt-10 overflow-hidden rounded-2xl border border-line">
+              <a
+                href={mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${COMPANY.name} location in Google Maps`}
+                className="group relative mt-10 block overflow-hidden rounded-2xl border border-line transition-colors hover:border-gold/40"
+              >
                 <iframe
                   title={`${COMPANY.name} location`}
-                  src="https://www.google.com/maps?q=Ernakulam,Kerala,India&output=embed"
+                  src={mapEmbed}
                   width="100%"
                   height="260"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale invert-[0.92] contrast-[0.9]"
+                  className="pointer-events-none grayscale invert-[0.92] contrast-[0.9] transition-all duration-500 group-hover:grayscale-0 group-hover:invert-0"
                 />
-              </div>
+                <span className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-line bg-ink/80 px-4 py-2 text-xs font-medium text-cream backdrop-blur transition-colors group-hover:border-gold group-hover:text-gold">
+                  <MapPin className="h-4 w-4 text-gold" /> Open in Google Maps
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </span>
+              </a>
             </Reveal>
           </div>
 

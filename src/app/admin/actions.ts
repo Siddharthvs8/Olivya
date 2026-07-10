@@ -244,6 +244,7 @@ export async function updateSettings(formData: FormData) {
       twitter: str(formData.get("twitter")) || undefined,
       kolo: str(formData.get("kolo")) || undefined,
       whatsapp: str(formData.get("whatsapp")) || undefined,
+      map_url: str(formData.get("map_url")) || undefined,
     },
     // About page — consultant. Blank fields fall back to the defaults so the
     // section never renders empty.
