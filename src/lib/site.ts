@@ -101,10 +101,10 @@ export const SERVICES = [
 ] as const;
 
 export const PROCESS = [
-  { step: "01", title: "Consultation", desc: "We listen — to your vision, your land and the way you want to live." },
-  { step: "02", title: "Design", desc: "Concepts evolve into detailed architecture and curated interiors." },
-  { step: "03", title: "Craft", desc: "Master craftsmen build with precision, care and premium materials." },
-  { step: "04", title: "Handover", desc: "A home that is uniquely yours — delivered to last for generations." },
+  { step: "01", title: "Design", desc: "Concepts evolve into detailed architecture and curated interiors." },
+  { step: "02", title: "Build", desc: "Master craftsmen raise your home with precision, care and premium materials." },
+  { step: "03", title: "Decor", desc: "Finishes, furnishings and lighting styled to make every room unmistakably yours." },
+  { step: "04", title: "Care", desc: "Handover is the beginning — we stay beside you with support that lasts for generations." },
 ] as const;
 
 export const STATS = [
